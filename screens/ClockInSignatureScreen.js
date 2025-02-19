@@ -72,7 +72,7 @@ const SignatureComponent = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{`${user.name} sign below to clock in`}</Text>
+      <Text style={styles.title}>{`${user.name} sign below to clock in for`}</Text>
       <Text style={styles.subtitle}>{currentDateTime}</Text>
       <SignatureScreen
         onOK={handleSave}

@@ -9,7 +9,7 @@ import AttendanceScreen from './screens/AttendanceScreen';
 import UsersScreen from './screens/UsersScreen';
 import ClockInScreen from './screens/ClockInScreen';
 import ClockOutScreen from './screens/ClockOutScreen';
-import SignatureComponent from './screens/SignatureScreen';
+import SignatureComponent from './screens/ClockInSignatureScreen';
 import UserAttendanceScreen from './screens/UserAttendanceScren';
 import SuccessScreen from './screens/SuccessScreen';
 import ClockOutSignatureScreen from './screens/ClockOutSignatureScreen';
@@ -22,7 +22,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="Admin" component={AdminScreen} options={{ title: 'Settings' }} />
+        <Stack.Screen name="Admin" component={AdminScreen} options={{ title: 'Admin panel' }} />
         <Stack.Screen name="Employee" component={EmployeeScreen} />
         <Stack.Screen name="AddUser" component={AddUserScreen} options={{ title: 'Create User' }}/>
         <Stack.Screen name="AttendanceScreen" component={AttendanceScreen} options={{ title: 'Attendance' }}/>
@@ -30,7 +30,7 @@ export default function App() {
         <Stack.Screen name="ClockInScreen" component={ClockInScreen} options={{ title: 'Clock In' }}/>
         <Stack.Screen name="ClockOutScreen" component={ClockOutScreen} options={{ title: 'Clock Out' }}/>
         <Stack.Screen name="UserAttendanceScreen" component={UserAttendanceScreen} options={{ title: 'Attendance Details' }} />
-        <Stack.Screen name="SignatureScreen" component={SignatureComponent} options={{ title: 'Signature' }}/>
+        <Stack.Screen name="ClockInSignatureScreen" component={SignatureComponent} options={{ title: 'Signature' }}/>
         <Stack.Screen name="Success" component={SuccessScreen}  options={{ headerShown:false }}/>
         <Stack.Screen name="ClockOutSuccess" component={SuccessClockOutScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="ClockOutSignature" component={ClockOutSignatureScreen} />

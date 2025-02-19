@@ -5,12 +5,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Modal,
+  TextInput,
+  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import logo from '../assets/logo.jpg';
+import logo from '../assets/jay-logo.png';
 
 const HomeScreen = ({ navigation }) => {
   const [currentDateTime, setCurrentDateTime] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const updateDateTime = () => {
     const now = new Date();
@@ -28,25 +34,59 @@ const HomeScreen = ({ navigation }) => {
     return () => clearInterval(intervalId);
   }, []);
 
+  const handleLogin = () => {
+    if (username === 'admin' && password === '123') { // Example check
+      setModalVisible(false);
+      navigation.navigate('Admin'); // Navigate to Admin screen
+    } else {
+      alert('Invalid username or password');
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Header with Settings Icon */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.settingsIcon}
-          onPress={() => navigation.navigate('Admin')}
-        >
+        <TouchableOpacity style={styles.settingsIcon} onPress={() => setModalVisible(true)}>
           <Icon name="cog" size={28} color="#fff" />
         </TouchableOpacity>
       </View>
 
+      {/* Login Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Login</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+            <View style={styles.buttonContainer}>
+              <Button title="Login" color="#3D9970" onPress={handleLogin} />
+              <Button title="Cancel" color="red" onPress={() => setModalVisible(false)} />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* Logo and Title */}
       <View style={styles.logoContainer}>
-        <Image
-          source={logo} // Add your logo image here
-          style={styles.logo}
-        />
-        <Text style={styles.title}>Lilongwe Attendance Register</Text>
+        <Image source={logo} style={styles.logo} />
+        <Text style={styles.title}>Attendance Register</Text>
       </View>
 
       {/* Date and Time Display */}
@@ -89,7 +129,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: 15,
-    paddingTop: 50, // For devices with a notch
+    paddingTop: 50,
   },
   settingsIcon: {
     padding: 5,
@@ -100,14 +140,13 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 150,
-    height: 150, 
+    height: 150,
     resizeMode: 'contain',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
- 
   },
   dateTimeContainer: {
     justifyContent: 'center',
@@ -119,11 +158,10 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   content: {
-
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 20, 
+    paddingBottom: 20,
   },
   button: {
     backgroundColor: '#007bff',
@@ -135,20 +173,51 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 10,
     width: '80%',
-    elevation: 3, 
-    shadowColor: '#000', 
+    elevation: 3,
+    shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
-    height: '20%', 
+    height: '20%',
   },
   clockOutButton: {
-    backgroundColor: '#dc3545',
+    backgroundColor: '#3D9970',
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

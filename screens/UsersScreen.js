@@ -106,12 +106,12 @@ const UsersScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     backgroundColor: '#f8f9fa',
   },
   title: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 5,
     
   },
   userItem: {

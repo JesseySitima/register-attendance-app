@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const ClockInScreen = () => {
   const [users, setUsers] = useState([]);
+  const [clockedInUsers, setClockedInUsers] = useState({});
   const navigation = useNavigation();
 
   // Fetch users from AsyncStorage
@@ -19,42 +20,48 @@ const ClockInScreen = () => {
     }
   };
 
-  // Check if the user has already clocked in for the day
-  const checkClockInStatus = async (user) => {
+  // Load clock-in status for users
+  const fetchClockedInUsers = async () => {
     try {
       const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
       const attendance = await AsyncStorage.getItem('attendance');
       const attendanceData = attendance ? JSON.parse(attendance) : {};
 
-      const userAttendance = attendanceData[user.id] || [];
+      const clockedInStatus = {};
+      users.forEach(user => {
+        clockedInStatus[user.id] = attendanceData[user.id]?.some(record => record.date === today);
+      });
 
-      // Check if the user has already clocked in today
-      const todayRecord = userAttendance.find((record) => record.date === today);
-
-      if (todayRecord) {
-        Alert.alert('You have already clocked in today.');
-      } else {
-        // Navigate to the signature screen if not clocked in yet
-        navigation.navigate('SignatureScreen', { user });
-      }
+      setClockedInUsers(clockedInStatus);
     } catch (error) {
-      console.error('Error checking clock-in status:', error);
-      Alert.alert('Error', 'Failed to check clock-in status.');
+      console.error('Error fetching clocked-in users:', error);
     }
   };
 
   useEffect(() => {
-    fetchUsers();  // Load users when the screen loads
+    fetchUsers();
   }, []);
 
-  const handleClockIn = (user) => {
-    checkClockInStatus(user);
+  useEffect(() => {
+    if (users.length > 0) {
+      fetchClockedInUsers();
+    }
+  }, [users]);
+
+  const handleClockIn = async (user) => {
+    if (clockedInUsers[user.id]) {
+      Alert.alert('You have already clocked in today.');
+    } else {
+      navigation.navigate('ClockInSignatureScreen', { user });
+    }
   };
-  
+
   const renderItem = ({ item }) => {
+    const isClockedIn = clockedInUsers[item.id];
+
     return (
       <TouchableOpacity
-        style={styles.userItem}
+        style={[styles.userItem, { backgroundColor: isClockedIn ? '#3D9970' : '#007bff' }]}
         onPress={() => handleClockIn(item)}
       >
         <Text style={styles.userText}>{item.name}</Text>
@@ -67,7 +74,7 @@ const ClockInScreen = () => {
       <Text style={styles.title}>Select your username below to Clock In</Text>
       {users.length > 0 ? (
         <FlatList
-          data={users} // Display all users
+          data={users}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           ListEmptyComponent={
@@ -86,15 +93,14 @@ export default ClockInScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     backgroundColor: '#f8f9fa',
   },
   title: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   userItem: {
-    backgroundColor: '#007bff',
     padding: 15,
     borderRadius: 8,
     marginVertical: 8,
